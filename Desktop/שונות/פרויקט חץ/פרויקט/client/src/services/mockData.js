@@ -1,101 +1,103 @@
 // Mock data for demo purposes
 
-// Question bank organized by subject
 export const questionBank = {
   'מתמטיקה': [
     {
       id: 'q1',
-      text: 'האם הבנת את השיטה הנוכחית?',
+      text: 'האם השיטה לפתרון פונקציות ריבועיות ברורה?',
       questionType: 'yes-no',
       subject: 'מתמטיקה'
     },
     {
       id: 'q2',
-      text: 'כמה יהיו 25 + 17?',
+      text: 'מהו ערך ה־X עבור 2x + 6 = 14?',
       questionType: 'multiple-choice',
-      options: ['42', '32', '52', '40'],
-      correctAnswer: 0,
+      options: ['2', '4', '6', '8'],
+      correctAnswer: 1,
       subject: 'מתמטיקה'
     },
     {
       id: 'q3',
-      text: 'האם ברור לך איך לפתור משוואות?',
+      text: 'האם ברור איך מציבים בנוסחת השורשים?',
       questionType: 'yes-no',
       subject: 'מתמטיקה'
-    },
-    {
-      id: 'q4',
-      text: 'מה החשיבות של סדר הפעולות?',
-      questionType: 'multiple-choice',
-      options: ['עוזר לפתור נכון', 'אין חשיבות', 'רק בשברים', 'לא יודע'],
-      correctAnswer: 0,
-      subject: 'מתמטיקה'
-    }
-  ],
-  'עברית': [
-    {
-      id: 'q5',
-      text: 'האם הבנת את הטקסט?',
-      questionType: 'yes-no',
-      subject: 'עברית'
-    },
-    {
-      id: 'q6',
-      text: 'מה הנושא העיקרי של השיר?',
-      questionType: 'multiple-choice',
-      options: ['אהבה', 'טבע', 'מלחמה', 'משפחה'],
-      correctAnswer: 1,
-      subject: 'עברית'
-    },
-    {
-      id: 'q7',
-      text: 'האם ברור הייחוד של הסגנון הספרותי?',
-      questionType: 'yes-no',
-      subject: 'עברית'
     }
   ],
   'אנגלית': [
     {
-      id: 'q8',
-      text: 'Do you understand the grammar?',
+      id: 'q4',
+      text: 'Did you understand the main idea of the text?',
       questionType: 'yes-no',
       subject: 'אנגלית'
     },
     {
-      id: 'q9',
-      text: 'Which is the correct translation?',
+      id: 'q5',
+      text: 'Which sentence is grammatically correct?',
       questionType: 'multiple-choice',
-      options: ['Option A', 'Option B', 'Option C', 'Option D'],
+      options: ['She go to school', 'She goes to school', 'She going to school', 'She gone to school'],
       correctAnswer: 1,
       subject: 'אנגלית'
     }
   ],
-  'מדעים': [
+  'היסטוריה': [
+    {
+      id: 'q6',
+      text: 'האם ברור מה היו הגורמים למלחמת העולם הראשונה?',
+      questionType: 'yes-no',
+      subject: 'היסטוריה'
+    },
+    {
+      id: 'q7',
+      text: 'איזו שנה מסמנת את תחילת המלחמה?',
+      questionType: 'multiple-choice',
+      options: ['1905', '1914', '1918', '1923'],
+      correctAnswer: 1,
+      subject: 'היסטוריה'
+    }
+  ],
+  'חץ': [
+    {
+      id: 'q8',
+      text: 'האם המורה קיבלה תמונת מצב מידית לאחר השיעור?',
+      questionType: 'yes-no',
+      subject: 'חץ'
+    },
+    {
+      id: 'q9',
+      text: 'האם הכלים בעבודה עם חץ עזרו לך להבין את התוכן?',
+      questionType: 'multiple-choice',
+      options: ['כן מאוד', 'כן', 'לא ממש', 'לא כלל'],
+      correctAnswer: 0,
+      subject: 'חץ'
+    }
+  ],
+  'ספרות': [
     {
       id: 'q10',
-      text: 'האם הנושא ברור?',
+      text: 'האם הצלחת לזהות את המסר המרכזי של היצירה?',
       questionType: 'yes-no',
-      subject: 'מדעים'
+      subject: 'ספרות'
     },
     {
       id: 'q11',
-      text: 'מה השלבים של התהליך?',
+      text: 'מה מאפיין את נקודת המבט של המספר?',
       questionType: 'multiple-choice',
-      options: ['א → ב → ג', 'ב → א → ג', 'ג → ב → א', 'לא בסדר מוגדר'],
-      correctAnswer: 0,
-      subject: 'מדעים'
+      options: ['מספר כל־יודע', 'מספר בגוף ראשון', 'מספר חיצוני', 'מספר מעורב'],
+      correctAnswer: 1,
+      subject: 'ספרות'
     }
-  ]
+  ],
+
 };
 
 export const mockQuestions = [
   {
     id: '1',
-    text: 'האם הבנת את הנושא?',
+    text: 'האם ברור החומר על פונקציות?',
     teacherId: 'teacher1',
-    teacherName: 'רחל כהן',
-    classId: 'class-3a',
-    className: 'כיתה ג׳',
+    teacherName: 'דנה כהן',
+    classId: 'class-10a',
+    className: 'י׳1',
     subject: 'מתמטיקה',
     questionType: 'yes-no',
     isActive: true,
@@ -104,14 +106,14 @@ export const mockQuestions = [
   },
   {
     id: '2',
-    text: 'כמה יהיו 25 + 17?',
+    text: 'מהו ערך ה־X עבור 2x + 6 = 14?',
     teacherId: 'teacher1',
-    teacherName: 'רחל כהן',
-    classId: 'class-3a',
-    className: 'כיתה ג׳',
+    teacherName: 'דנה כהן',
+    classId: 'class-10a',
+    className: 'י׳1',
     subject: 'מתמטיקה',
     questionType: 'multiple-choice',
-    options: ['42', '32', '52', '40'],
+    options: ['2', '4', '6', '8'],
     isActive: true,
     createdAt: new Date(Date.now() - 5 * 60000),
     lessonDate: new Date()
@@ -120,61 +122,56 @@ export const mockQuestions = [
 
 export const mockResponses = {
   '1': [
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: false, respondentClass: 'כיתה ג׳' },
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: true, respondentClass: 'כיתה ג׳' },
-    { answer: false, respondentClass: 'כיתה ג׳' },
+    { answer: true, respondentClass: 'י׳1' },
+    { answer: true, respondentClass: 'י׳1' },
+    { answer: false, respondentClass: 'י׳1' },
+    { answer: true, respondentClass: 'י׳1' }
   ],
   '2': [
-    { answer: 2, respondentClass: 'כיתה ג׳' },
-    { answer: 2, respondentClass: 'כיתה ג׳' },
-    { answer: 0, respondentClass: 'כיתה ג׳' },
-    { answer: 2, respondentClass: 'כיתה ג׳' },
-    { answer: 2, respondentClass: 'כיתה ג׳' },
+    { answer: 1, respondentClass: 'י׳1' },
+    { answer: 1, respondentClass: 'י׳1' },
+    { answer: 0, respondentClass: 'י׳1' }
   ]
 };
 
 export const mockAnalytics = {
   byClass: [
-    { name: 'כיתה א׳', understanding: 85, responses: 24, totalStudents: 28 },
-    { name: 'כיתה ב׳', understanding: 92, responses: 28, totalStudents: 30 },
-    { name: 'כיתה ג׳', understanding: 78, responses: 22, totalStudents: 25 },
-    { name: 'כיתה ד׳', understanding: 88, responses: 26, totalStudents: 29 },
+    { name: 'י׳1', understanding: 85, responses: 24, totalStudents: 28 },
+    { name: 'י׳2', understanding: 92, responses: 28, totalStudents: 30 },
+    { name: 'י״א1', understanding: 78, responses: 22, totalStudents: 25 },
+    { name: 'י״ב2', understanding: 88, responses: 26, totalStudents: 29 }
   ],
   byTeacher: [
-    { name: 'רחל כהן', understanding: 88, responses: 35, avgClassSize: 28 },
+    { name: 'דנה כהן', understanding: 88, responses: 35, avgClassSize: 28 },
     { name: 'שרה דוד', understanding: 82, responses: 32, avgClassSize: 26 },
     { name: 'מרים לוי', understanding: 90, responses: 38, avgClassSize: 30 },
-    { name: 'דבורה ברק', understanding: 85, responses: 30, avgClassSize: 27 },
+    { name: 'דבורה ברק', understanding: 85, responses: 30, avgClassSize: 27 }
   ],
   bySubject: [
-    { name: 'מתמטיקה', value: 35, understanding: 86 },
-    { name: 'עברית', value: 25, understanding: 84 },
-    { name: 'אנגלית', value: 20, understanding: 80 },
-    { name: 'מדעים', value: 20, understanding: 82 },
+    { name: 'מתמטיקה', value: 30, understanding: 86 },
+    { name: 'אנגלית', value: 20, understanding: 84 },
+    { name: 'היסטוריה', value: 15, understanding: 80 },
+    { name: 'ספרות', value: 10, understanding: 82 },
+    { name: 'חץ', value: 15, understanding: 90 }
   ],
   insights: [
     {
       type: 'success',
-      title: 'נקודת חוזקה 💪',
-      description: 'מורה שרה מגיעה ל-92% הבנה בכיתה ב׳ - ממשיכי כך!',
-      color: '#10b981'
+      title: 'נקודת חוזק',
+      description: 'י׳2 מציגה שיפור עקבי במדדי הבנה בשבועיים האחרונים.',
+      color: '#2c9aa1'
     },
     {
       type: 'attention',
-      title: 'שטח לשיפור 🎯',
-      description: 'כיתה ג׳ בהיסטוריה צריכה חיזוק נוסף - הציעו תרגילים נוספים',
-      color: '#f59e0b'
+      title: 'שטח לשיפור',
+      description: 'נדרש תגבור נקודתי בכיתות י״א במקצוע היסטוריה.',
+      color: '#d19a66'
     },
     {
       type: 'trend',
-      title: 'מגמה חיובית 📈',
-      description: 'הבנה גדלה ב-15% בחודש האחרון בכל הכיתות',
-      color: '#3b82f6'
+      title: 'מגמה חיובית',
+      description: 'עלייה של 12% במדדי ההבנה במקצועות ההומניים.',
+      color: '#1f6d86'
     }
   ]
 };
@@ -182,7 +179,7 @@ export const mockAnalytics = {
 export const mockTeacherQuestions = [
   {
     id: 'q1',
-    text: 'האם הבנתם את משפט הסכום?',
+    text: 'האם הבנתן את הדוגמאות מהשיעור?',
     responses: 24,
     understanding: 87,
     createdAt: new Date(Date.now() - 2 * 60 * 60000),
@@ -190,7 +187,7 @@ export const mockTeacherQuestions = [
   },
   {
     id: 'q2',
-    text: 'מה היה הקשה במיוחד?',
+    text: 'מה היה החלק המאתגר ביותר?',
     responses: 19,
     understanding: 0,
     createdAt: new Date(Date.now() - 1 * 60 * 60000),
@@ -198,7 +195,7 @@ export const mockTeacherQuestions = [
   },
   {
     id: 'q3',
-    text: 'האם תרגול קטן עזר?',
+    text: 'האם נדרש חידוד קצר לפני שיעור הבא?',
     responses: 28,
     understanding: 93,
     createdAt: new Date(Date.now() - 30 * 60000),

@@ -3,15 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { questionBank } from '../services/mockData';
 import './TeacherPage.css';
+import smartSchoolLogo from '../assets/smart-school-logo.svg';
 
 const TeacherPage = ({ user, onLogout, onChangeRole }) => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState('subject'); // subject | selection | custom | preview | review
+  const [currentStep, setCurrentStep] = useState('subject');
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [customQuestion, setCustomQuestion] = useState('');
   const [customType, setCustomType] = useState('yes-no');
   const [customOptions, setCustomOptions] = useState(['', '', '', '']);
+  const [customTarget, setCustomTarget] = useState('');
   const [finalQuestions, setFinalQuestions] = useState([]);
 
   const subjects = Object.keys(questionBank);
@@ -37,19 +39,19 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
   const handleAddCustomQuestion = useCallback(() => {
     const trimmedQuestion = customQuestion.trim();
     if (!trimmedQuestion) {
-      alert('⚠️ אנא הכן שאלה');
+      alert('אנא הזיני שאלה');
       return;
     }
-    
+
     if (trimmedQuestion.length < 5) {
-      alert('⚠️ השאלה קצרה מדי (לפחות 5 תווים)');
+      alert('השאלה קצרה מדי (לפחות 5 תווים)');
       return;
     }
 
     if (customType === 'multiple-choice') {
       const validOptions = customOptions.filter(o => o.trim());
       if (validOptions.length < 2) {
-        alert('⚠️ נדרשות לפחות 2 אפשרויות לשאלה בחירה');
+        alert('נדרשות לפחות 2 אפשרויות לשאלת בחירה');
         return;
       }
     }
@@ -60,27 +62,28 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
       questionType: customType,
       subject: selectedSubject,
       isCustom: true,
+      targetStudent: customTarget.trim() || null,
       options: customType === 'multiple-choice' ? customOptions.filter(o => o.trim()) : undefined
     };
 
     const selected = selectedSubject ? questionBank[selectedSubject].filter(q => selectedQuestions.includes(q.id)) : [];
     setFinalQuestions([...selected, customQ]);
     setCurrentStep('preview');
-  }, [customQuestion, customType, customOptions, selectedSubject, selectedQuestions]);
+  }, [customQuestion, customType, customOptions, selectedSubject, selectedQuestions, customTarget]);
 
   const handleBackToSelection = () => {
     setCustomQuestion('');
     setCustomType('yes-no');
     setCustomOptions(['', '', '', '']);
+    setCustomTarget('');
     setCurrentStep('selection');
   };
 
   const handleStartSession = useCallback(() => {
     if (finalQuestions.length === 0) {
-      alert('⚠️ אנא בחר לפחות שאלה אחת');
+      alert('אנא בחרי לפחות שאלה אחת');
       return;
     }
-    // Store selected questions in session/state for StudentPage
     sessionStorage.setItem('selectedQuestions', JSON.stringify(finalQuestions));
     setCurrentStep('review');
   }, [finalQuestions]);
@@ -102,24 +105,25 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
   return (
     <div className="teacher-page">
       <div className="teacher-header">
-        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">💡</button>
+        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">
+          <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
+        </button>
         <div className="header-nav">
           <button className="role-switch-btn" onClick={() => handleNavigate('teacher')} title="עמוד המורה">👩‍🏫</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">👧</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח ניהול">📊</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">🧑‍🎓</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח הנהלה">📊</button>
         </div>
         <div className="header-content">
-          <h1>עמוד המורה</h1>
-          <p>בחרי שאלות מהמאגר או הוסיפי שאלה משלך</p>
+          <h1>עמוד מורה</h1>
+          <p>בניית סט שאלות קצר לסיום שיעור, עם אפשרות לשאלה ייעודית.</p>
         </div>
         <button className="back-button" onClick={() => navigate('/')}>חזרה</button>
       </div>
 
       <div className="teacher-container">
-        {/* Step 1: Select Subject */}
         {currentStep === 'subject' && (
           <div className="step-content">
-            <h2>בחרי נושא שיעור</h2>
+            <h2>בחירת מקצוע</h2>
             <div className="subjects-grid">
               {subjects.map(subject => (
                 <button
@@ -136,12 +140,11 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
           </div>
         )}
 
-        {/* Step 2: Select Questions */}
         {currentStep === 'selection' && (
           <div className="step-content">
             <div className="step-header">
-              <h2>בחרי שאלות מ{selectedSubject}</h2>
-              <button className="secondary-btn" onClick={() => setCurrentStep('subject')}>← חזרה לנושאים</button>
+              <h2>בחירת שאלות מ{selectedSubject}</h2>
+              <button className="secondary-btn" onClick={() => setCurrentStep('subject')}>חזרה למקצועות</button>
             </div>
             <div className="questions-list">
               {questionBank[selectedSubject].map(question => (
@@ -155,7 +158,7 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
                   <label htmlFor={question.id}>
                     <div className="question-text">{question.text}</div>
                     <div className="question-type">
-                      {question.questionType === 'yes-no' ? '✓ כן / לא' : '✓ בחירה מרובה'}
+                      {question.questionType === 'yes-no' ? 'כן / לא' : 'בחירה מרובה'}
                     </div>
                   </label>
                 </div>
@@ -164,23 +167,22 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
             <div className="step-actions">
               <p className="selected-count">נבחרו {selectedQuestions.length} שאלות</p>
               <button className="primary-btn" onClick={handleNextToCustom}>
-                {selectedQuestions.length > 0 ? 'הוסיפי שאלה משלך →' : 'דלגי להוסיפת שאלה משלך →'}
+                {selectedQuestions.length > 0 ? 'הוספת שאלה ייעודית' : 'דלגי לשאלה ייעודית'}
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 3: Add Custom Question */}
         {currentStep === 'custom' && (
           <div className="step-content">
-            <h2>הוסיפי שאלה משלך</h2>
+            <h2>שאלה ייעודית לתלמידה</h2>
             <div className="custom-form">
               <div className="form-group">
                 <label>טקסט השאלה</label>
                 <textarea
                   value={customQuestion}
                   onChange={(e) => setCustomQuestion(e.target.value)}
-                  placeholder="הקלידי את השאלה..."
+                  placeholder="כתבי כאן את השאלה..."
                   rows="3"
                 />
               </div>
@@ -227,19 +229,28 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
                   ))}
                 </div>
               )}
+
+              <div className="form-group">
+                <label>למי מיועדת השאלה (אופציונלי)</label>
+                <input
+                  type="text"
+                  value={customTarget}
+                  onChange={(e) => setCustomTarget(e.target.value)}
+                  placeholder="שם תלמידה"
+                />
+              </div>
             </div>
 
             <div className="step-actions">
-              <button className="secondary-btn" onClick={handleBackToSelection}>← חזרה</button>
-              <button className="primary-btn" onClick={handleAddCustomQuestion}>המשיכי לסקירה →</button>
+              <button className="secondary-btn" onClick={handleBackToSelection}>חזרה</button>
+              <button className="primary-btn" onClick={handleAddCustomQuestion}>להמשך לסקירה</button>
             </div>
           </div>
         )}
 
-        {/* Step 4: Preview and Start */}
         {currentStep === 'preview' && (
           <div className="step-content">
-            <h2>סקירה של השאלות</h2>
+            <h2>סקירת שאלות</h2>
             <div className="preview-list">
               {finalQuestions.map((q, idx) => (
                 <div key={q.id} className="preview-item">
@@ -247,8 +258,9 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
                   <div className="preview-details">
                     <p className="preview-text">{q.text}</p>
                     <div className="preview-meta">
-                      {q.questionType === 'yes-no' ? '✓ כן / לא' : '✓ בחירה מרובה'}
-                      {q.isCustom && <span className="custom-badge">שאלה משלך</span>}
+                      {q.questionType === 'yes-no' ? 'כן / לא' : 'בחירה מרובה'}
+                      {q.isCustom && <span className="custom-badge">שאלה ייעודית</span>}
+                      {q.targetStudent && <span className="target-badge">לתלמידה: {q.targetStudent}</span>}
                     </div>
                   </div>
                 </div>
@@ -256,28 +268,27 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
             </div>
 
             <div className="step-actions">
-              <button className="secondary-btn" onClick={() => setCurrentStep('custom')}>← חזרה</button>
-              <button className="success-btn" onClick={handleStartSession}>התחילי סשן עם התלמידות →</button>
+              <button className="secondary-btn" onClick={() => setCurrentStep('custom')}>חזרה</button>
+              <button className="success-btn" onClick={handleStartSession}>התחלת סשן לתלמידות</button>
             </div>
           </div>
         )}
 
-        {/* Step 5: Review and Ready */}
         {currentStep === 'review' && (
           <div className="step-content">
-            <h2>✓ מוכן להתחלה</h2>
+            <h2>מוכן לשיתוף</h2>
             <div className="review-summary">
               <div className="summary-card">
                 <div className="summary-icon">📋</div>
                 <div className="summary-info">
-                  <p className="summary-title">סך הכל שאלות</p>
+                  <p className="summary-title">סה״כ שאלות</p>
                   <p className="summary-value">{finalQuestions.length}</p>
                 </div>
               </div>
               <div className="summary-card">
                 <div className="summary-icon">📚</div>
                 <div className="summary-info">
-                  <p className="summary-title">נושא השיעור</p>
+                  <p className="summary-title">מקצוע</p>
                   <p className="summary-value">{selectedSubject}</p>
                 </div>
               </div>
@@ -285,7 +296,7 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
                 <div className="summary-icon">⏱️</div>
                 <div className="summary-info">
                   <p className="summary-title">משך משוער</p>
-                  <p className="summary-value">{finalQuestions.length * 0.5} דק'</p>
+                  <p className="summary-value">{finalQuestions.length * 0.5} דק׳</p>
                 </div>
               </div>
             </div>
@@ -303,8 +314,8 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
             </div>
 
             <div className="step-actions">
-              <button className="secondary-btn" onClick={handleBackToPreview}>← חזור לעריכה</button>
-              <button className="success-btn" onClick={handleStartQuestions}>🎯 התחיל סשן →</button>
+              <button className="secondary-btn" onClick={handleBackToPreview}>חזרה לעריכה</button>
+              <button className="success-btn" onClick={handleStartQuestions}>מעבר לתלמידות</button>
             </div>
           </div>
         )}

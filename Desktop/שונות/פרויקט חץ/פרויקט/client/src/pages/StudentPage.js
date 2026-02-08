@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './StudentPage.css';
+import smartSchoolLogo from '../assets/smart-school-logo.svg';
 
 const StudentPage = ({ user, onLogout, onChangeRole }) => {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
   const [answer, setAnswer] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [answeredCount, setAnsweredCount] = useState(0);
+  const [studentName, setStudentName] = useState('');
 
   useEffect(() => {
-    // Get selected questions from sessionStorage (set by TeacherPage)
     const selectedQuestionsJSON = sessionStorage.getItem('selectedQuestions');
     if (selectedQuestionsJSON) {
       const selectedQuestions = JSON.parse(selectedQuestionsJSON);
@@ -20,37 +21,89 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
     }
   }, []);
 
+  const visibleQuestions = useMemo(() => {
+    if (!studentName.trim()) {
+      return questions;
+    }
+    const normalized = studentName.trim().toLowerCase();
+    return questions.filter(q => !q.targetStudent || q.targetStudent.toLowerCase() === normalized);
+  }, [questions, studentName]);
+
+  useEffect(() => {
+    if (currentQuestionIndex > 0 && currentQuestionIndex >= visibleQuestions.length) {
+      setCurrentQuestionIndex(0);
+      setAnswer(null);
+      setSubmitted(false);
+    }
+  }, [visibleQuestions, currentQuestionIndex]);
+
   if (questions.length === 0) {
     return (
       <div className="student-page">
         <div className="student-header">
-          <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">💡</button>
+          <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">
+            <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
+          </button>
           <div className="header-nav">
             <button className="role-switch-btn" onClick={() => { onChangeRole('teacher'); navigate('/teacher'); }} title="עמוד המורה">👩‍🏫</button>
-            <button className="role-switch-btn" onClick={() => { onChangeRole('student'); navigate('/student'); }} title="עמוד התלמידה">👧</button>
-            <button className="role-switch-btn" onClick={() => { onChangeRole('admin'); navigate('/admin'); }} title="לוח ניהול">📊</button>
+            <button className="role-switch-btn" onClick={() => { onChangeRole('student'); navigate('/student'); }} title="עמוד התלמידה">🧑‍🎓</button>
+            <button className="role-switch-btn" onClick={() => { onChangeRole('admin'); navigate('/admin'); }} title="לוח הנהלה">📊</button>
           </div>
           <div className="header-content">
-            <h1>עמוד התלמידה</h1>
-            <p>המורה עדיין לא בחרה שאלות. אנא חכי...</p>
+            <h1>עמוד תלמידה</h1>
+            <p>המורה עדיין לא פתחה סשן שאלות.</p>
           </div>
           <button className="back-button" onClick={() => navigate('/')}>חזרה</button>
         </div>
         <div className="student-container">
-          <p style={{ textAlign: 'center', color: '#999' }}>⏳ המורה תבחר שאלות בקרוב...</p>
+          <p style={{ textAlign: 'center', color: '#5c6b70' }}>הסשן יופיע כאן כשהמורה תתחיל.</p>
         </div>
       </div>
     );
   }
 
-  const question = questions[currentQuestionIndex];
+  if (visibleQuestions.length === 0) {
+    return (
+      <div className="student-page">
+        <div className="student-header">
+          <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">
+            <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
+          </button>
+          <div className="header-nav">
+            <button className="role-switch-btn" onClick={() => { onChangeRole('teacher'); navigate('/teacher'); }} title="עמוד המורה">👩‍🏫</button>
+            <button className="role-switch-btn" onClick={() => { onChangeRole('student'); navigate('/student'); }} title="עמוד התלמידה">🧑‍🎓</button>
+            <button className="role-switch-btn" onClick={() => { onChangeRole('admin'); navigate('/admin'); }} title="לוח הנהלה">📊</button>
+          </div>
+          <div className="header-content">
+            <h1>עמוד תלמידה</h1>
+            <p>הזיני את שמך כדי לראות שאלות ייעודיות.</p>
+          </div>
+          <button className="back-button" onClick={() => navigate('/')}>חזרה</button>
+        </div>
+        <div className="student-container">
+          <div className="name-card">
+            <label>שם תלמידה</label>
+            <input
+              type="text"
+              value={studentName}
+              onChange={(e) => setStudentName(e.target.value)}
+              placeholder="כתבי את שמך"
+            />
+            <p>אין שאלות פתוחות עבורך כרגע.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const question = visibleQuestions[currentQuestionIndex];
 
   const handleSubmitAnswer = () => {
     if (answer !== null) {
       setSubmitted(true);
       setAnsweredCount(answeredCount + 1);
       setTimeout(() => {
-        if (currentQuestionIndex < questions.length - 1) {
+        if (currentQuestionIndex < visibleQuestions.length - 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
           setAnswer(null);
           setSubmitted(false);
@@ -67,7 +120,6 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
   };
 
   const handleRestart = () => {
-    // Cleanup
     sessionStorage.removeItem('selectedQuestions');
     onChangeRole('teacher');
     navigate('/teacher');
@@ -76,15 +128,17 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
   return (
     <div className="student-page">
       <div className="student-header">
-        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">💡</button>
+        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">
+          <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
+        </button>
         <div className="header-nav">
           <button className="role-switch-btn" onClick={() => handleNavigate('teacher')} title="עמוד המורה">👩‍🏫</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">👧</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח ניהול">📊</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">🧑‍🎓</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח הנהלה">📊</button>
         </div>
         <div className="header-content">
-          <h1>עמוד התלמידה</h1>
-          <p>אנא ענו בכנות וללא לחץ</p>
+          <h1>עמוד תלמידה</h1>
+          <p>מענה מהיר וברור לסיום שיעור.</p>
         </div>
         <button className="back-button" onClick={() => navigate('/')}>חזרה</button>
       </div>
@@ -95,36 +149,51 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
             <div className="success-animation">
               <div className="checkmark">✓</div>
             </div>
-            <h2>תודה! 🎉</h2>
-            <p>השלמת את כל השאלות בהצלחה</p>
+            <h2>תודה!</h2>
+            <p>ענית על כל השאלות בהצלחה.</p>
             <p className="response-summary">ענית על {answeredCount} שאלות</p>
             <button className="primary-button" onClick={handleRestart}>
-              חזרה לתחילה
+              חזרה לתחילת הסשן
             </button>
           </div>
         ) : submitted ? (
           <div className="success-message">
-            <h2>✓ תודה!</h2>
-            <p>התשובה שלך נרשמה בהצלחה</p>
-            {currentQuestionIndex < questions.length - 1 && (
-              <p className="next-hint">השאלה הבאה מגיעה...</p>
+            <h2>תודה!</h2>
+            <p>התשובה נשמרה.</p>
+            {currentQuestionIndex < visibleQuestions.length - 1 && (
+              <p className="next-hint">השאלה הבאה מופיעה מיד.</p>
             )}
           </div>
         ) : (
           <div className="question-container">
+            <div className="student-top">
+              <div className="name-field">
+                <label>שם תלמידה (אופציונלי)</label>
+                <input
+                  type="text"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  placeholder="כתבי את שמך"
+                />
+              </div>
+              {question?.targetStudent && (
+                <div className="target-pill">שאלה מיועדת ל: {question.targetStudent}</div>
+              )}
+            </div>
+
             <div className="progress-bar">
-              <div 
+              <div
                 className="progress-fill"
-                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                style={{ width: `${((currentQuestionIndex + 1) / visibleQuestions.length) * 100}%` }}
               />
             </div>
             <p className="progress-text">
-              שאלה {currentQuestionIndex + 1} מתוך {questions.length}
+              שאלה {currentQuestionIndex + 1} מתוך {visibleQuestions.length}
             </p>
 
             <div className="question-box">
               <p className="question-text">{question.text}</p>
-              
+
               <div className="answer-options">
                 {question.questionType === 'yes-no' ? (
                   <>
@@ -139,8 +208,8 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
                       className={`option-btn no ${answer === false ? 'selected' : ''}`}
                       onClick={() => setAnswer(false)}
                     >
-                      <span className="icon">✗</span>
-                      <span className="text">לא, אני צריכה עזרה</span>
+                      <span className="icon">✕</span>
+                      <span className="text">לא, צריכה חיזוק</span>
                     </button>
                   </>
                 ) : question.questionType === 'multiple-choice' ? (
@@ -155,13 +224,13 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
                   ))
                 ) : null}
               </div>
-              
+
               <button
                 className="submit-btn"
                 onClick={handleSubmitAnswer}
                 disabled={answer === null}
               >
-                שליחה →
+                שליחה
               </button>
             </div>
           </div>

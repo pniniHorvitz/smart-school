@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { mockAnalytics } from '../services/mockData';
 import './AdminPage.css';
+import smartSchoolLogo from '../assets/smart-school-logo.svg';
 
 const AdminPage = ({ user, onLogout, onChangeRole }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('classes');
 
-  const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#06d6a0'];
+  const COLORS = ['#2c9aa1', '#1f6d86', '#2b5163', '#4b7b8c', '#9aa8a4'];
 
   const handleNavigate = (role) => {
     onChangeRole(role);
@@ -19,15 +20,17 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
   return (
     <div className="admin-page">
       <div className="admin-header">
-        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">💡</button>
+        <button className="home-logo" onClick={() => navigate('/')} title="חזרה לעמוד הבית">
+          <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
+        </button>
         <div className="header-nav">
           <button className="role-switch-btn" onClick={() => handleNavigate('teacher')} title="עמוד המורה">👩‍🏫</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">👧</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח ניהול">📊</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">🧑‍🎓</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח הנהלה">📊</button>
         </div>
         <div className="header-content">
-          <h1>לוח ניהול</h1>
-          <p>ניתוח נתונים וקבלת החלטות מבוססת נתונים</p>
+          <h1>לוח הנהלה</h1>
+          <p>תמונה מערכתית של הבנה, איכות הוראה ומגמות בכיתות חטיבה ותיכון.</p>
         </div>
         <button className="back-button" onClick={() => navigate('/')}>חזרה</button>
       </div>
@@ -41,14 +44,15 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
               <span className="kpi-value">{mockAnalytics.byClass.length}</span>
             </div>
           </div>
-          <div className="kpi-card">            <div className="kpi-icon">👩‍🏫</div>
+          <div className="kpi-card">
+            <div className="kpi-icon">👩‍🏫</div>
             <div className="kpi-content">
               <span className="kpi-label">מורות</span>
               <span className="kpi-value">{mockAnalytics.byTeacher.length}</span>
             </div>
           </div>
           <div className="kpi-card">
-            <div className="kpi-icon">📚</div>
+            <div className="kpi-icon">📈</div>
             <div className="kpi-content">
               <span className="kpi-label">ממוצע הבנה</span>
               <span className="kpi-value">86%</span>
@@ -57,7 +61,7 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
           <div className="kpi-card">
             <div className="kpi-icon">📝</div>
             <div className="kpi-content">
-              <span className="kpi-label">תשובות כ״ס</span>
+              <span className="kpi-label">תשובות היום</span>
               <span className="kpi-value">125</span>
             </div>
           </div>
@@ -68,25 +72,25 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
             className={activeTab === 'classes' ? 'active' : ''}
             onClick={() => setActiveTab('classes')}
           >
-            📊 לפי כיתות
+            לפי כיתות
           </button>
           <button
             className={activeTab === 'teachers' ? 'active' : ''}
             onClick={() => setActiveTab('teachers')}
           >
-            👩‍🏫 לפי מורות
+            לפי מורות
           </button>
           <button
             className={activeTab === 'subjects' ? 'active' : ''}
             onClick={() => setActiveTab('subjects')}
           >
-            📚 לפי מקצועות
+            לפי מקצועות
           </button>
           <button
             className={activeTab === 'insights' ? 'active' : ''}
             onClick={() => setActiveTab('insights')}
           >
-            💡 תובנות
+            תובנות
           </button>
         </div>
 
@@ -96,15 +100,15 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
               <h2>הבנה לפי כיתה</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={mockAnalytics.byClass}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                  <XAxis dataKey="name" stroke="#666" />
-                  <YAxis stroke="#666" />
-                  <Tooltip 
-                    contentStyle={{ background: '#fff', border: '1px solid #ccc', borderRadius: '8px' }}
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d8e2df" />
+                  <XAxis dataKey="name" stroke="#54646a" />
+                  <YAxis stroke="#54646a" />
+                  <Tooltip
+                    contentStyle={{ background: '#fff', border: '1px solid #c9d6d2', borderRadius: '8px' }}
                     formatter={(value) => `${value}%`}
                   />
                   <Legend />
-                  <Bar dataKey="understanding" fill="#667eea" name="אחוז הבנה" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="understanding" fill="#2c9aa1" name="אחוז הבנה" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
               <div className="chart-summary">
@@ -126,15 +130,15 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
               <h2>ביצוע לפי מורה</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={mockAnalytics.byTeacher} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                  <XAxis type="number" stroke="#666" />
-                  <YAxis dataKey="name" type="category" stroke="#666" width={80} />
-                  <Tooltip 
-                    contentStyle={{ background: '#fff', border: '1px solid #ccc', borderRadius: '8px' }}
+                  <CartesianGrid strokeDasharray="3 3" stroke="#d8e2df" />
+                  <XAxis type="number" stroke="#54646a" />
+                  <YAxis dataKey="name" type="category" stroke="#54646a" width={80} />
+                  <Tooltip
+                    contentStyle={{ background: '#fff', border: '1px solid #c9d6d2', borderRadius: '8px' }}
                     formatter={(value) => `${value}%`}
                   />
                   <Legend />
-                  <Bar dataKey="understanding" fill="#764ba2" name="אחוז הבנה" radius={[0, 8, 8, 0]} />
+                  <Bar dataKey="understanding" fill="#1f6d86" name="אחוז הבנה" radius={[0, 8, 8, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -152,7 +156,7 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
                     labelLine={false}
                     label={({ name, value }) => `${name} (${value})`}
                     outerRadius={100}
-                    fill="#8884d8"
+                    fill="#2c9aa1"
                     dataKey="value"
                   >
                     {mockAnalytics.bySubject.map((entry, index) => (
@@ -190,12 +194,12 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
               </div>
 
               <div className="recommendations-section">
-                <h3>📋 המלצות לפעולה</h3>
+                <h3>המלצות לפעולה</h3>
                 <ul className="recommendations-list">
-                  <li>✓ התייעצו עם מורה דבורה על שיטות ההוראה בכיתה ד׳</li>
-                  <li>✓ ערכו תרגול נוסף בכיתה ג׳ בהיסטוריה</li>
-                  <li>✓ שיתפו עם מורה שרה את ההוצאה בכיתה ב׳</li>
-                  <li>✓ שקלו העמקה בנושא מתמטיקה בכיתה א׳</li>
+                  <li>הקצאת תגבור לכיתות עם ירידה מתמשכת בהבנה.</li>
+                  <li>שיתוף מורות עם שיטות הוראה שמציגות שיפור יציב.</li>
+                  <li>בדיקת מקצועות עם פער מתמשך בין כיתות מקבילות.</li>
+                  <li>תכנון התערבות נקודתית לקבוצות מתקשות.</li>
                 </ul>
               </div>
             </div>

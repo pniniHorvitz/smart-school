@@ -1,17 +1,19 @@
 .admin-page {
   direction: rtl;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: radial-gradient(circle at top, #f6f7f1 0%, #eef2ed 55%, #e7eee9 100%);
 }
 
 .admin-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
   padding: 20px 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 18px rgba(31, 63, 74, 0.12);
+  border-bottom: 1px solid rgba(31, 63, 74, 0.08);
   display: flex;
   align-items: center;
   gap: 15px;
+  backdrop-filter: blur(8px);
 }
 
 .header-nav {
@@ -20,13 +22,11 @@
 }
 
 .home-logo {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  width: 45px;
-  height: 45px;
+  background: white;
+  border: 1px solid rgba(31, 63, 74, 0.2);
+  width: 56px;
+  height: 56px;
   border-radius: 8px;
-  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -36,19 +36,22 @@
 }
 
 .home-logo:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.15);
+  border-color: rgba(31, 63, 74, 0.35);
+  transform: scale(1.05);
+}
+
+.brand-logo {
+  height: 32px;
 }
 
 .role-switch-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: white;
+  border: 1px solid rgba(31, 63, 74, 0.2);
+  color: var(--ink);
   width: 45px;
   height: 45px;
   border-radius: 8px;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -58,9 +61,8 @@
 }
 
 .role-switch-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
+  border-color: rgba(31, 63, 74, 0.35);
+  transform: scale(1.05);
 }
 
 .header-content {
@@ -75,14 +77,14 @@
 
 .admin-header p {
   margin: 5px 0 0;
-  opacity: 0.95;
+  opacity: 0.9;
   font-size: 0.95rem;
 }
 
 .back-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: white;
+  border: 1px solid rgba(31, 63, 74, 0.2);
+  color: var(--ink);
   padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
@@ -92,22 +94,7 @@
 }
 
 .back-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.header-content {
-  flex: 1;
-}
-
-.admin-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.admin-header p {
-  margin: 5px 0 0;
-  opacity: 0.95;
+  border-color: rgba(31, 63, 74, 0.35);
 }
 
 .admin-container {
@@ -130,14 +117,14 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border-left: 4px solid #667eea;
+  box-shadow: 0 6px 18px rgba(31, 63, 74, 0.12);
+  border: 1px solid rgba(31, 63, 74, 0.08);
   transition: all 0.3s ease;
 }
 
 .kpi-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 30px rgba(31, 63, 74, 0.14);
 }
 
 .kpi-icon {
@@ -151,7 +138,7 @@
 
 .kpi-label {
   font-size: 0.85rem;
-  color: #999;
+  color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -160,7 +147,7 @@
 .kpi-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #333;
+  color: var(--ink);
 }
 
 .admin-tabs {
@@ -172,28 +159,29 @@
   background: white;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(31, 63, 74, 0.08);
+  border: 1px solid rgba(31, 63, 74, 0.08);
 }
 
 .admin-tabs button {
   padding: 10px 20px;
-  border: 2px solid #e0e0e0;
+  border: 1px solid rgba(31, 63, 74, 0.2);
   background: white;
   cursor: pointer;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #666;
+  color: var(--ink-soft);
   transition: all 0.3s ease;
 }
 
 .admin-tabs button:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: var(--accent);
+  color: var(--ink);
 }
 
 .admin-tabs button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
   color: white;
   border-color: transparent;
 }
@@ -202,7 +190,8 @@
   background: white;
   border-radius: 12px;
   padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgba(31, 63, 74, 0.08);
+  border: 1px solid rgba(31, 63, 74, 0.08);
 }
 
 .chart-container {
@@ -210,10 +199,10 @@
 }
 
 .chart-container h2 {
-  color: #333;
+  color: var(--ink);
   margin: 0 0 20px 0;
   font-size: 1.4rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 1px solid rgba(31, 63, 74, 0.1);
   padding-bottom: 15px;
 }
 
@@ -232,20 +221,20 @@
 .class-name {
   min-width: 80px;
   font-weight: 600;
-  color: #333;
+  color: var(--ink);
 }
 
 .score-bar {
   flex: 1;
   height: 8px;
-  background: #f0f0f0;
+  background: #e7eeea;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .score-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-strong) 100%);
   border-radius: 4px;
   transition: width 0.4s ease;
 }
@@ -254,7 +243,7 @@
   min-width: 45px;
   text-align: right;
   font-weight: 700;
-  color: #667eea;
+  color: var(--accent-strong);
 }
 
 .subject-summary {
@@ -269,7 +258,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: #f9f9f9;
+  background: #f6f7f1;
   border-radius: 8px;
 }
 
@@ -283,12 +272,12 @@
 .subject-name {
   flex: 1;
   font-weight: 600;
-  color: #333;
+  color: var(--ink);
 }
 
 .subject-value {
   font-weight: 600;
-  color: #667eea;
+  color: var(--accent-strong);
 }
 
 .insights-section {
@@ -306,12 +295,12 @@
   border-left: 4px solid;
   border-radius: 8px;
   overflow: hidden;
-  background: #f9f9f9;
+  background: #f6f7f1;
   transition: all 0.3s ease;
 }
 
 .insight-card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(31, 63, 74, 0.12);
   transform: translateY(-3px);
 }
 
@@ -328,19 +317,19 @@
 
 .insight-body p {
   margin: 0;
-  color: #666;
+  color: var(--ink-soft);
   line-height: 1.5;
 }
 
 .recommendations-section {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: rgba(44, 154, 161, 0.08);
+  border: 1px solid rgba(44, 154, 161, 0.2);
   border-radius: 12px;
   padding: 20px;
 }
 
 .recommendations-section h3 {
-  color: #333;
+  color: var(--ink);
   margin: 0 0 15px 0;
   font-size: 1.1rem;
 }
@@ -353,9 +342,9 @@
 
 .recommendations-list li {
   padding: 10px 0;
-  color: #555;
+  color: var(--ink-soft);
   font-size: 0.95rem;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 1px solid rgba(31, 63, 74, 0.1);
 }
 
 .recommendations-list li:last-child {
@@ -387,78 +376,4 @@
   .subject-summary {
     grid-template-columns: 1fr;
   }
-}
-
-.admin-tabs {
-  display: flex;
-  gap: 10px;
-  padding: 20px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  justify-content: flex-end;
-}
-
-.admin-tabs button {
-  padding: 10px 20px;
-  border: none;
-  background: #f0f0f0;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-.admin-tabs button.active {
-  background: #667eea;
-  color: white;
-}
-
-.admin-content {
-  max-width: 1200px;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.chart-container {
-  padding: 20px;
-}
-
-.chart-container h2 {
-  color: #333;
-  text-align: right;
-  margin-bottom: 20px;
-}
-
-.insights {
-  max-width: 1200px;
-  margin: 20px auto;
-}
-
-.insights h2 {
-  color: #333;
-  text-align: right;
-  margin-bottom: 15px;
-}
-
-.insight-card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-right: 4px solid #667eea;
-  border-radius: 5px;
-  text-align: right;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.insight-card p {
-  margin: 0;
-  color: #333;
-}
-
-.insight-card strong {
-  color: #667eea;
 }
