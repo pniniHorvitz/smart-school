@@ -50,21 +50,35 @@
   background: white;
   border: 1px solid rgba(31, 63, 74, 0.2);
   color: var(--ink);
-  width: 45px;
-  height: 45px;
+  min-width: 80px;
+  height: 60px;
   border-radius: 8px;
-  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .role-switch-btn:hover {
   border-color: rgba(31, 63, 74, 0.35);
   transform: scale(1.05);
+}
+
+.role-switch-btn img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+}
+
+.role-switch-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .header-content {
@@ -106,9 +120,11 @@
 .student-content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
   padding: 20px;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .name-card {
@@ -117,7 +133,7 @@
   padding: 24px;
   box-shadow: 0 10px 30px rgba(31, 63, 74, 0.12);
   max-width: 420px;
-  margin: 0 auto;
+  margin: 0;
   text-align: right;
 }
 
@@ -138,8 +154,80 @@
 
 .question-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 760px;
+  flex: 1 1 480px;
 }
+
+/* Homework card on the side */
+.homework-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(31,63,74,0.08);
+  width: 320px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.homework-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.homework-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 10px;
+}
+
+.homework-row label {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.homework-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.homework-row input[type="text"] {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: 24px;
+  border: 1px solid rgba(31,63,74,0.12);
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  font-size: 0.95rem;
+  direction: ltr; /* keep code left-to-right inside */
+  text-align: center;
+}
+
+.homework-row .secondary-btn {
+  flex: 0 0 auto;
+  min-width: 56px;
+  height: 42px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid rgba(31,63,74,0.12);
+  box-shadow: 0 6px 16px rgba(31,63,74,0.06);
+}
+
+.homework-row .secondary-btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31,63,74,0.2);
+}
+
+/* On RTL layouts, visually place the button to the left of the input */
+.homework-row { /* keep normal flow; button will float */ }
 
 .student-top {
   display: flex;
@@ -401,6 +489,15 @@
   transition: all 0.3s ease;
 }
 
+.homework-error {
+  color: #b00020;
+  background: rgba(176,0,32,0.04);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(176,0,32,0.08);
+  margin-top: 8px;
+}
+
 .primary-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 30px rgba(31, 63, 74, 0.2);
@@ -428,4 +525,38 @@
     flex-direction: column;
     align-items: stretch;
   }
+
+  .student-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .homework-card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Ensure homework card controls keep compact look on wide screens */
+  .homework-card { max-width: 360px; }
+  .homework-row input[type="text"] { flex-basis: 200px; }
+}
+
+/* Floating send button: keep visually attached to the card */
+.homework-card {
+  position: relative;
+}
+
+.homework-float-btn {
+  position: relative;
+}
+
+.homework-float-btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31,63,74,0.2);
+}
+
+.homework-row input[type="text"] {
+  text-align: center;
 }

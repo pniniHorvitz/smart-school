@@ -58,13 +58,13 @@ export const questionBank = {
   'חץ': [
     {
       id: 'q8',
-      text: 'האם המורה קיבלה תמונת מצב מידית לאחר השיעור?',
+      text: 'האם הבנת את הרעיון שעומד מאחורי חץ?',
       questionType: 'yes-no',
       subject: 'חץ'
     },
     {
       id: 'q9',
-      text: 'האם הכלים בעבודה עם חץ עזרו לך להבין את התוכן?',
+      text: 'האם את מרגישה שהכלים שנתנו לך בחץ יעזרו לך להיות מורה טובה יותר?',
       questionType: 'multiple-choice',
       options: ['כן מאוד', 'כן', 'לא ממש', 'לא כלל'],
       correctAnswer: 0,
@@ -200,5 +200,37 @@ export const mockTeacherQuestions = [
     understanding: 93,
     createdAt: new Date(Date.now() - 30 * 60000),
     active: true
+  }
+];
+
+export const studentLists = [
+  {
+    id: 'list-1',
+    name: 'כיתה י׳1 - תזמורת',
+    students: [
+      { id: 's1', name: 'נועה כהן' },
+      { id: 's2', name: 'מאיה לוי' },
+      { id: 's3', name: 'טליה ברק' },
+      { id: 's4', name: 'יעל שמש' }
+    ]
+  },
+  {
+    id: 'list-2',
+    name: 'כיתה י״א2 - מתמטיקה',
+    students: [
+      { id: 's5', name: 'מיכל רז' },
+      { id: 's6', name: 'אדל פרץ' },
+      { id: 's7', name: 'שירה טל' },
+      { id: 's8', name: 'גל כהן' }
+    ]
+  },
+  {
+    id: 'list-3',
+    name: 'קבוצת בוחן - אנגלית',
+    students: [
+      { id: 's9', name: 'רות בן דוד' },
+      { id: 's10', name: 'ליהו אביטל' },
+      { id: 's11', name: 'אורי שגב' }
+    ]
   }
 ];

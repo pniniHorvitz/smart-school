@@ -1,11 +1,34 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import DemoSelector from './pages/DemoSelector';
 import TeacherPage from './pages/TeacherPage';
 import StudentPage from './pages/StudentPage';
 import AdminPage from './pages/AdminPage';
+import ProspectusPage from './pages/ProspectusPage';
+import PrintCodes from './pages/PrintCodes';
+import topLeftMark from './assets/asset-top-left.svg';
 import './App.css';
+
+const HomeQuickLink = () => {
+  const location = useLocation();
+
+  if (location.pathname === '/') {
+    return null;
+  }
+
+  return (
+    <Link className="global-home-link" to="/" title="חזרה לדף הבית">
+      דף הבית
+    </Link>
+  );
+};
+
+const GlobalTopLeftMark = () => (
+  <Link className="global-top-left" to="/" title="דף הבית">
+    <img src={topLeftMark} alt="Smart School" />
+  </Link>
+);
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,7 +48,9 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
+      <Router basename="/smart-school">
+        <GlobalTopLeftMark />
+        <HomeQuickLink />
         <Routes>
           <Route
             path="/"
@@ -51,6 +76,8 @@ function App() {
               <AdminPage user={user} onLogout={handleLogout} onChangeRole={handleChangeRole} />
             }
           />
+          <Route path="/prospectus" element={<ProspectusPage />} />
+          <Route path="/print-codes" element={<PrintCodes />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

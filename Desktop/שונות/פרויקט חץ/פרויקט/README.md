@@ -255,6 +255,23 @@ npm start
 
 ---
 
+## 📦 הכנה לעלות ל-GitHub / פריסה
+
+- העתק/מלא קבצי `.env` לפי `.env.example` בכל סביבת עבודה לפני דחיפה או פריסה.
+- ודא שה־`client` נבנה לפני פריסה: `cd client && npm run build`.
+- השרת מוגדר לשרת את ה־`build/` כש־`NODE_ENV=production` (ראה `server/src/server.js`).
+- הקבצים הרגישים כמו `.env` כבר ב־`.gitignore` ולא יידחפו.
+- להרצות בדיקות ולנקות בעיות אבטחה לפני דחיפה:
+```bash
+cd server
+npm test
+npm audit fix
+cd ../client
+npm audit fix
+npm run build
+```
+
+
 ## 📄 רישיון
 
 MIT License

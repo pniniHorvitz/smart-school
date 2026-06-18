@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { mockAnalytics } from '../services/mockData';
 import './AdminPage.css';
-import smartSchoolLogo from '../assets/smart-school-logo.svg';
+import smartSchoolLogo from '../assets/smart-school-logo.png';
+import roleIcon from '../assets/role-icon.png';
 
 const AdminPage = ({ user, onLogout, onChangeRole }) => {
   const navigate = useNavigate();
@@ -24,9 +25,18 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
           <img src={smartSchoolLogo} alt="Smart School" className="brand-logo" />
         </button>
         <div className="header-nav">
-          <button className="role-switch-btn" onClick={() => handleNavigate('teacher')} title="עמוד המורה">👩‍🏫</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">🧑‍🎓</button>
-          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח הנהלה">📊</button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('teacher')} title="עמוד המורה">
+            <img src={roleIcon} alt="" aria-hidden="true" />
+            <span className="role-switch-text">מורה</span>
+          </button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('student')} title="עמוד התלמידה">
+            <img src={roleIcon} alt="" aria-hidden="true" />
+            <span className="role-switch-text">תלמידה</span>
+          </button>
+          <button className="role-switch-btn" onClick={() => handleNavigate('admin')} title="לוח הנהלה">
+            <img src={roleIcon} alt="" aria-hidden="true" />
+            <span className="role-switch-text">הנהלה</span>
+          </button>
         </div>
         <div className="header-content">
           <h1>לוח הנהלה</h1>
@@ -196,10 +206,10 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
               <div className="recommendations-section">
                 <h3>המלצות לפעולה</h3>
                 <ul className="recommendations-list">
-                  <li>הקצאת תגבור לכיתות עם ירידה מתמשכת בהבנה.</li>
-                  <li>שיתוף מורות עם שיטות הוראה שמציגות שיפור יציב.</li>
-                  <li>בדיקת מקצועות עם פער מתמשך בין כיתות מקבילות.</li>
-                  <li>תכנון התערבות נקודתית לקבוצות מתקשות.</li>
+                  <li>שילוב חיזוק קצר בתחילת שיעור ונקודות עצירה לבדיקת הבנה.</li>
+                  <li>קידום למידה פעילה בקבוצות קטנות ושאלות פתוחות קצרות.</li>
+                  <li>הנגשת דפי חזרה ממוקדים לפני מבחנים ושיעורי תגבור ממוקדים.</li>
+                  <li>מעקב רגשי וחברתי לצד ההישגים: שיחות אישיות וחיזוק מוטיבציה.</li>
                 </ul>
               </div>
             </div>

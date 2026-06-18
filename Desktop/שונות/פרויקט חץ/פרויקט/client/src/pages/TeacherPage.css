@@ -57,15 +57,16 @@
   background: white;
   border: 1px solid rgba(31, 63, 74, 0.2);
   color: var(--ink);
-  width: 45px;
-  height: 45px;
+  min-width: 80px;
+  height: 60px;
   border-radius: 8px;
-  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   flex-shrink: 0;
 }
 
@@ -80,6 +81,19 @@
 .role-switch-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.role-switch-btn img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+}
+
+.role-switch-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .header-content {
@@ -116,17 +130,21 @@
 }
 
 .teacher-container {
-  max-width: 900px;
+  max-width: 760px;
   margin: 40px auto;
   padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .step-content {
   background: white;
   border-radius: 12px;
-  padding: 40px;
+  padding: 32px;
   box-shadow: 0 10px 35px rgba(31, 63, 74, 0.12);
   animation: slideDown 0.4s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes slideDown {
@@ -321,6 +339,45 @@
   font-size: 0.95rem;
 }
 
+/* Homework radio toggle styling */
+.homework-toggle {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.homework-toggle label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.homework-toggle input[type="radio"] {
+  display: none;
+}
+
+.homework-toggle .radio-text {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(31,63,74,0.12);
+  color: var(--ink);
+  box-shadow: 0 8px 22px rgba(31,63,74,0.06);
+  font-weight: 700;
+}
+
+.homework-toggle input[type="radio"]:checked + .radio-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 10px 30px rgba(31,63,74,0.12);
+}
+
+.homework-toggle .radio-text:hover {
+  transform: translateY(-2px);
+}
+
 .form-group textarea,
 .form-group input[type="text"] {
   padding: 12px;
@@ -507,6 +564,178 @@
 .q-text {
   flex: 1;
   line-height: 1.4;
+}
+
+/* Luxurious non-modal homework box matching site design */
+.homework-box {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, #fbfffe 100%);
+  border: 1px solid rgba(31,63,74,0.08);
+  box-shadow: 0 12px 30px rgba(31,63,74,0.08);
+  border-radius: 14px;
+  padding: 22px;
+  margin-top: 24px;
+}
+
+.homework-accent {
+  min-width: 64px;
+  min-height: 64px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:1.2rem;
+  box-shadow: 0 6px 18px rgba(31,63,74,0.12);
+  flex-shrink: 0;
+}
+
+.homework-accent.inactive {
+  background: #fef1f1;
+  color: #b00020;
+  box-shadow: 0 6px 18px rgba(176,0,32,0.06);
+  border: 1px solid rgba(176,0,32,0.12);
+}
+
+.homework-accent.active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+}
+
+.homework-content {
+  flex: 1;
+}
+
+.homework-title {
+  margin: 0 0 6px 0;
+  font-size: 1.25rem;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.homework-desc {
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+.homework-controls {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.homework-select-label {
+  font-weight:700;
+  color:var(--ink);
+  margin-right:6px;
+}
+
+.homework-select {
+  width: 100%;
+  padding: 12px 16px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid rgba(31,63,74,0.12);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(31,63,74,0.04);
+  display: flex;
+  align-items: center;
+  font-size: 0.98rem;
+}
+
+.homework-print-btn {
+  margin-left: 0;
+  align-self: center;
+}
+
+/* Inline homework preview styling to match preview items */
+.homework-preview {
+  background: rgba(44, 154, 161, 0.06);
+  border-left: 4px solid var(--accent);
+  align-items: center;
+}
+
+.homework-inline-controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.homework-inline-controls .homework-select {
+  min-width: 200px;
+}
+
+.homework-inline-controls .homework-print-btn {
+  margin-left: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 24px rgba(31,63,74,0.12);
+}
+
+/* custom select arrow for a consistent look */
+.homework-select::-ms-expand { display: none; }
+.homework-select[role="combobox"], .homework-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(0,0,0,0.35) 50%), linear-gradient(135deg, rgba(0,0,0,0.35) 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50% - 6px), calc(100% - 12px) calc(50% - 6px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+}
+
+/* New styles for homework summary and actions */
+.homework-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.homework-list {
+  font-size: 0.98rem;
+  color: var(--ink-strong, #1f3b3b);
+  background: rgba(44,154,161,0.04);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(31,63,74,0.06);
+  max-width: 420px;
+}
+
+.homework-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.homework-actions .primary-btn {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+}
+
+.homework-actions .secondary-btn {
+  padding: 9px 14px;
+}
+
+.homework-error {
+  color: #b00020;
+  background: rgba(176,0,32,0.04);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(176,0,32,0.08);
+  max-width: 420px;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {

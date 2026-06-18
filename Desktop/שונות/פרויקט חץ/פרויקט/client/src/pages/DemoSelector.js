@@ -1,9 +1,9 @@
-﻿import React from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './DemoSelector.css';
-import smartSchoolLogo from '../assets/smart-school-logo.svg';
-
-
+import smartSchoolLogo from '../assets/smart-school-logo.png';
+import roleIcon from '../assets/role-icon.png';
 
 const DemoSelector = ({ onSelectRole }) => {
   return (
@@ -20,24 +20,13 @@ const DemoSelector = ({ onSelectRole }) => {
             <h1>מדידה חכמה — למידה משמעותית</h1>
             <p className="hero-subtitle">מעקב בזמן אמת שמייצר תמונת למידה מיידית.</p>
           </div>
+          <div className="hero-actions">
+            <Link className="prospectus-cta" to="/prospectus">
+              לצפייה בפרוספקט
+            </Link>
+          </div>
         </div>
-
       </header>
-
-      <section className="home-grid">
-        <div className="home-card">
-          <h2>תמונה מיידית לשיעור</h2>
-          <p>מדידה קצרה וברורה שמעניקה למורה החלטות בזמן אמת.</p>
-        </div>
-        <div className="home-card">
-          <h2>פידבק מדויק לתלמידה</h2>
-          <p>שאלות נקודתיות לפי צורך, בלי לשבור את רצף השיעור.</p>
-        </div>
-        <div className="home-card">
-          <h2>תובנות ניהוליות</h2>
-          <p>השוואות בין כיתות, מגמות לאורך זמן ומיקוד מקצועות.</p>
-        </div>
-      </section>
 
       <section className="role-section">
         <div className="section-head">
@@ -46,7 +35,9 @@ const DemoSelector = ({ onSelectRole }) => {
         </div>
         <div className="role-grid">
           <div className="role-card teacher-card">
-            <div className="card-icon">👩‍🏫</div>
+            <div className="card-icon" aria-hidden="true">
+              <img src={roleIcon} alt="" />
+            </div>
             <h3>מורה</h3>
             <p>בניית סשן שאלות קצר ואפקטיבי.</p>
             <button className="unified-cta" onClick={() => onSelectRole('teacher')}>
@@ -54,7 +45,9 @@ const DemoSelector = ({ onSelectRole }) => {
             </button>
           </div>
           <div className="role-card student-card">
-            <div className="card-icon">🧑‍🎓</div>
+            <div className="card-icon" aria-hidden="true">
+              <img src={roleIcon} alt="" />
+            </div>
             <h3>תלמידה</h3>
             <p>מענה פשוט ומהיר בסיום שיעור.</p>
             <button className="unified-cta" onClick={() => onSelectRole('student')}>
@@ -62,7 +55,9 @@ const DemoSelector = ({ onSelectRole }) => {
             </button>
           </div>
           <div className="role-card admin-card">
-            <div className="card-icon">📈</div>
+            <div className="card-icon" aria-hidden="true">
+              <img src={roleIcon} alt="" />
+            </div>
             <h3>הנהלה</h3>
             <p>מעקב ארוך טווח על איכות ההוראה.</p>
             <button className="unified-cta" onClick={() => onSelectRole('admin')}>
@@ -74,6 +69,7 @@ const DemoSelector = ({ onSelectRole }) => {
 
       <footer className="footer">
         <p>SMART SCHOOL · מערכת מעקב רציפה · 2026</p>
+        <p>פניני הורביץ - 0548533306 ©</p>
       </footer>
     </div>
   );
