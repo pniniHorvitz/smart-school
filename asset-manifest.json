@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/smart-school/static/css/main.6b282dc3.css",
+    "main.js": "/smart-school/static/js/main.d1062eed.js",
+    "static/media/smart-school-logo.png": "/smart-school/static/media/smart-school-logo.855324c715a3ec4da93b.png",
+    "static/media/asset-top-left.svg": "/smart-school/static/media/asset-top-left.b0cdd619443f692eb25ad4356bf9f76e.svg",
+    "static/media/role-icon.png": "/smart-school/static/media/role-icon.3cc009f23cc7abb0a1ee.png",
+    "index.html": "/smart-school/index.html",
+    "main.6b282dc3.css.map": "/smart-school/static/css/main.6b282dc3.css.map",
+    "main.d1062eed.js.map": "/smart-school/static/js/main.d1062eed.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6b282dc3.css",
+    "static/js/main.d1062eed.js"
+  ]
+}
