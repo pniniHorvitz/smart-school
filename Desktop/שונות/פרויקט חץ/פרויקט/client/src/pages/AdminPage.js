@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { mockAnalytics } from '../services/mockData';
+import { mockAnalytics, studentFocusInsights } from '../services/mockData';
 import './AdminPage.css';
 import smartSchoolLogo from '../assets/smart-school-logo.png';
 import roleIcon from '../assets/role-icon.png';
@@ -10,8 +10,33 @@ import roleIcon from '../assets/role-icon.png';
 const AdminPage = ({ user, onLogout, onChangeRole }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('classes');
+  const [showTracking, setShowTracking] = useState(false);
 
   const COLORS = ['#2c9aa1', '#1f6d86', '#2b5163', '#4b7b8c', '#9aa8a4'];
+
+  const getCurrentHomeworkMissing = () => {
+    try {
+      const codes = JSON.parse(sessionStorage.getItem('generatedCodes') || '[]');
+      const submitted = JSON.parse(sessionStorage.getItem('homeworkSubmitted') || '[]');
+      const submittedCodes = new Set(submitted.map(item => item.code));
+      return codes
+        .filter(item => !submittedCodes.has(item.code))
+        .map(item => ({
+          id: item.studentId,
+          name: item.name,
+          className: 'הסשן הנוכחי',
+          subject: 'שיעורי בית',
+          percent: 0,
+          note: 'טרם הוזן קוד שיעורי בית'
+        }));
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const homeworkMissing = getCurrentHomeworkMissing().length > 0
+    ? getCurrentHomeworkMissing()
+    : studentFocusInsights.homeworkMissing;
 
   const handleNavigate = (role) => {
     onChangeRole(role);
@@ -46,6 +71,65 @@ const AdminPage = ({ user, onLogout, onChangeRole }) => {
       </div>
 
       <div className="admin-container">
+        <div className="tracking-toggle">
+          <button
+            className="primary-btn"
+            onClick={() => {
+              console.log('Admin tracking toggle clicked — current:', showTracking);
+              setShowTracking(s => !s);
+            }}
+            aria-expanded={showTracking}
+          >
+            {showTracking ? 'הסתר מעקב' : 'הצג מעקב'}
+          </button>
+        </div>
+
+        {showTracking && (
+          <section className="student-focus-section" aria-label="איתור תלמידות">
+            <div className="focus-section-head">
+              <h2>איתור תלמידות לפי מגמות</h2>
+            </div>
+            <div className="focus-grid">
+              <div className="focus-panel alert">
+                <h3><span>לא השלימו ש״ב</span><strong>{homeworkMissing.length}</strong></h3>
+                {homeworkMissing.map(student => (
+                  <div className="focus-row" key={`admin-hw-${student.id}`}>
+                    <div>
+                      <strong>{student.name}</strong>
+                      <span>{student.className} · {student.subject}</span>
+                    </div>
+                    <p>{student.note}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="focus-panel warning">
+                <h3><span>קושי חריג בחומר</span><strong>{studentFocusInsights.unusualDifficulty.length}</strong></h3>
+                {studentFocusInsights.unusualDifficulty.map(student => (
+                  <div className="focus-row" key={`admin-diff-${student.id}`}>
+                    <div>
+                      <strong>{student.name}</strong>
+                      <span>{student.className} · {student.subject}</span>
+                    </div>
+                    <p>{student.percent}% הבנה · {student.note}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="focus-panel success">
+                <h3><span>שיפור משמעותי</span><strong>{studentFocusInsights.improved.length}</strong></h3>
+                {studentFocusInsights.improved.map(student => (
+                  <div className="focus-row" key={`admin-up-${student.id}`}>
+                    <div>
+                      <strong>{student.name}</strong>
+                      <span>{student.className} · {student.subject}</span>
+                    </div>
+                    <p>+{student.percent}% מהחודש הקודם · {student.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         <div className="kpi-cards">
           <div className="kpi-card">
             <div className="kpi-icon">👥</div>

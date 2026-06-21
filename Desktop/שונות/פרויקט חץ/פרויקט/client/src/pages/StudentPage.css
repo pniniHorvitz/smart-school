@@ -1,7 +1,7 @@
 .student-page {
   direction: rtl;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #f6f7f1 0%, #eef2ed 55%, #e7eee9 100%);
+  background: radial-gradient(circle at top, #ffffff 0%, #f7fbfa 55%, #eef9f8 100%);
   display: flex;
   flex-direction: column;
 }
@@ -128,13 +128,14 @@
 }
 
 .name-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(31, 63, 74, 0.12);
-  max-width: 420px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbffff 100%);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(44, 154, 161, 0.08);
+  max-width: 460px;
   margin: 0;
   text-align: right;
+  border: 1px solid rgba(44,154,161,0.09);
 }
 
 .name-card label {
@@ -160,19 +161,34 @@
 
 /* Homework card on the side */
 .homework-card {
-  background: white;
-  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbffff 100%);
+  border-radius: 16px;
   padding: 18px;
-  box-shadow: 0 10px 30px rgba(31,63,74,0.08);
+  box-shadow: 0 12px 30px rgba(44,154,161,0.06);
   width: 320px;
   flex-shrink: 0;
   text-align: right;
+  border: 1px solid rgba(44,154,161,0.08);
+}
+
+.homework-card-start {
+  width: min(100%, 520px);
+  padding: 30px;
+  border: 1px solid rgba(44, 154, 161, 0.12);
+  box-shadow: 0 20px 55px rgba(44,154,161,0.10);
 }
 
 .homework-card h3 {
   margin: 0 0 8px 0;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   color: var(--ink);
+}
+
+.homework-intro {
+  color: #216b6f;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  font-weight: 600;
 }
 
 .homework-row {
@@ -226,6 +242,49 @@
   border-color: rgba(31,63,74,0.2);
 }
 
+/* Name-required block inside homework card should match main name-card styling */
+.homework-card .name-required {
+  margin-bottom: 12px;
+}
+
+.homework-card .name-required label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.homework-card .name-required input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(31, 63, 74, 0.18);
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+/* Field error text */
+.field-error {
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* Disabled state styling for option buttons when name not provided */
+.option-btn.disabled,
+.option-btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Disabled input/button in homework row */
+.homework-row input[disabled],
+.homework-row button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* On RTL layouts, visually place the button to the left of the input */
 .homework-row { /* keep normal flow; button will float */ }
 
@@ -245,8 +304,9 @@
 }
 
 .name-field label {
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: 0.95rem;
+  color: #2b6b6d;
+  font-weight: 700;
 }
 
 .name-field input {
@@ -288,12 +348,13 @@
 }
 
 .question-box {
-  background: white;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(31, 63, 74, 0.2);
+  background: linear-gradient(180deg, #ffffff 0%, #f7ffff 100%);
+  padding: 42px;
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(44,154,161,0.08);
   text-align: center;
-  animation: scaleIn 0.4s ease;
+  animation: scaleIn 0.35s ease;
+  border: 1px solid rgba(44,154,161,0.06);
 }
 
 @keyframes scaleIn {
@@ -308,11 +369,11 @@
 }
 
 .question-text {
-  font-size: 1.4rem;
-  color: var(--ink);
-  margin-bottom: 30px;
-  font-weight: 600;
-  line-height: 1.6;
+  font-size: 1.6rem;
+  color: #173b3d;
+  margin-bottom: 26px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .answer-options {
@@ -338,16 +399,16 @@
 }
 
 .option-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: rgba(44, 154, 161, 0.08);
-  transform: translateY(-2px);
+  border-color: #1ca3a8;
+  background: linear-gradient(90deg, rgba(44,154,161,0.12), rgba(28,163,168,0.06));
+  transform: translateY(-4px);
 }
 
 .option-btn.selected {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  background: linear-gradient(135deg, #2cc0bd 0%, #1fa7a8 100%);
   color: white;
   border-color: transparent;
-  box-shadow: 0 8px 25px rgba(31, 63, 74, 0.2);
+  box-shadow: 0 10px 30px rgba(44,154,161,0.12);
 }
 
 .option-btn.yes.selected {
@@ -369,15 +430,15 @@
 
 .submit-btn {
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  padding: 16px;
+  background: linear-gradient(135deg, #2cc0bd 0%, #1fa7a8 100%);
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.22s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -445,14 +506,15 @@
 
 .checkmark {
   display: inline-block;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #2c9aa1 0%, #1f6d86 100%);
+  width: 84px;
+  height: 84px;
+  background: linear-gradient(135deg, #2fe0d9 0%, #1fb6b0 100%);
   color: white;
   border-radius: 50%;
-  line-height: 80px;
-  font-size: 3rem;
-  font-weight: bold;
+  line-height: 84px;
+  font-size: 3.2rem;
+  font-weight: 800;
+  box-shadow: 0 8px 30px rgba(44,154,161,0.12);
 }
 
 .completion-screen h2 {

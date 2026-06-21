@@ -13,7 +13,9 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
   const [submitted, setSubmitted] = useState(false);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [studentName, setStudentName] = useState('');
+  const [studentNameError, setStudentNameError] = useState('');
   const [homeworkDoneLocal, setHomeworkDoneLocal] = useState(false);
+  const [homeworkRequired, setHomeworkRequired] = useState(false);
   const [hwCodeInput, setHwCodeInput] = useState('');
   const [hwError, setHwError] = useState('');
 
@@ -34,6 +36,9 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
         // console.warn('Failed to parse selectedQuestions', e);
       }
     }
+    const hasGeneratedCodes = !!sessionStorage.getItem('generatedCodes');
+    const homeworkSkipped = sessionStorage.getItem('homeworkSkipped') === '1';
+    setHomeworkRequired(hasGeneratedCodes && !homeworkSkipped);
   }, []);
 
   const visibleQuestions = useMemo(() => {
@@ -131,7 +136,45 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
 
   const question = visibleQuestions[currentQuestionIndex];
 
+  const handleHomeworkCodeSubmit = () => {
+    if (!studentName.trim()) {
+      setStudentNameError('אנא הכניסי את שמך לפני הזנת הקוד');
+      return;
+    }
+    const code = hwCodeInput.trim().toUpperCase();
+    if (!code) {
+      setHwError('אנא הכניסי קוד');
+      return;
+    }
+
+    const raw = sessionStorage.getItem('generatedCodes');
+    if (!raw) {
+      setHwError('אין קודי תלמידות. בקשי מהמורה להפיק קודים.');
+      return;
+    }
+
+    try {
+      const codes = JSON.parse(raw);
+      const match = codes.find(c => c.code === code);
+      if (match) {
+        const submittedArr = JSON.parse(sessionStorage.getItem('homeworkSubmitted') || '[]');
+        submittedArr.push({ code, studentId: match.studentId, at: Date.now() });
+        sessionStorage.setItem('homeworkSubmitted', JSON.stringify(submittedArr));
+        setHwError('');
+        setHomeworkDoneLocal(true);
+      } else {
+        setHwError('קוד לא מזוהה');
+      }
+    } catch (e) {
+      setHwError('הקודים לא נטענו בצורה תקינה. בקשי מהמורה להפיק אותם מחדש.');
+    }
+  };
+
   const handleSubmitAnswer = () => {
+    if (!studentName.trim()) {
+      setStudentNameError('אנא הכניסי את שמך לפני המענה');
+      return;
+    }
     if (answer !== null) {
       setSubmitted(true);
       setAnsweredCount(answeredCount + 1);
@@ -187,56 +230,17 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
 
       <div className="student-content">
         {submitted === 'completed' ? (
-          !homeworkDoneLocal ? (
-            <div className="homework-card">
-              <h3>שיעורי בית</h3>
-              <div className="homework-row">
-                <label>הקלידי את קוד המורה</label>
-                <div className="homework-controls">
-                  <input
-                    type="text"
-                    value={hwCodeInput}
-                    onChange={(e) => setHwCodeInput(e.target.value)}
-                    placeholder="קוד שקיבלת מהמורה"
-                  />
-                  <button
-                    className="secondary-btn homework-float-btn"
-                    onClick={() => {
-                      const code = hwCodeInput.trim().toUpperCase();
-                      if (!code) { setHwError('אנא הכניסי קוד'); return; }
-                      const raw = sessionStorage.getItem('generatedCodes');
-                      if (!raw) { setHwError('אין קודי תלמידות. בקשי מהמורה להפיק קודים.'); return; }
-                      const codes = JSON.parse(raw);
-                      const match = codes.find(c => c.code === code);
-                      if (match) {
-                        // mark locally
-                        const submittedArr = JSON.parse(sessionStorage.getItem('homeworkSubmitted') || '[]');
-                        submittedArr.push({ code, studentId: match.studentId, at: Date.now() });
-                        sessionStorage.setItem('homeworkSubmitted', JSON.stringify(submittedArr));
-                        setHwError('');
-                        setHomeworkDoneLocal(true);
-                      } else {
-                        setHwError('קוד לא מזוהה');
-                      }
-                    }}
-                  >שלח</button>
-                </div>
-              </div>
-              {hwError && <p className="homework-error">{hwError}</p>}
+          <div className="completion-screen">
+            <div className="success-animation">
+              <div className="checkmark">✓</div>
             </div>
-          ) : (
-            <div className="completion-screen">
-              <div className="success-animation">
-                <div className="checkmark">✓</div>
-              </div>
-              <h2>תודה!</h2>
-              <p>ענית על כל השאלות והשלמת את שיעורי הבית.</p>
-              <p className="response-summary">ענית על {answeredCount} שאלות</p>
-              <button className="primary-button" onClick={handleRestart}>
-                חזרה לתחילת הסשן
-              </button>
-            </div>
-          )
+            <h2>תודה!</h2>
+            <p>ענית על כל השאלות.</p>
+            <p className="response-summary">ענית על {answeredCount} שאלות</p>
+            <button className="primary-button" onClick={handleRestart}>
+              חזרה לתחילת הסשן
+            </button>
+          </div>
         ) : submitted ? (
           <div className="success-message">
             <h2>תודה!</h2>
@@ -245,17 +249,60 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
               <p className="next-hint">השאלה הבאה מופיעה מיד.</p>
             )}
           </div>
+        ) : homeworkRequired && !homeworkDoneLocal ? (
+          <div className="homework-card homework-card-start">
+            <h3>שיעורי בית</h3>
+            <p className="homework-intro">לפני השאלות, הקלידי את שמך ולאחר מכן את הקוד שקיבלת מהמורה.</p>
+            <div className="form-group name-required">
+              <label>שם תלמידה (חובה)</label>
+              <input
+                type="text"
+                value={studentName}
+                onChange={(e) => { setStudentName(e.target.value); setStudentNameError(''); }}
+                placeholder="כתבי את שמך"
+                aria-required="true"
+              />
+              {studentNameError && <p className="field-error">{studentNameError}</p>}
+            </div>
+            <div className="homework-row">
+              <label>קוד אישי</label>
+              <div className="homework-controls">
+                <input
+                  type="text"
+                  value={hwCodeInput}
+                  onChange={(e) => {
+                    setHwCodeInput(e.target.value.toUpperCase());
+                    setHwError('');
+                  }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleHomeworkCodeSubmit()}
+                  placeholder="לדוגמה: A1B2C3"
+                  disabled={!studentName.trim()}
+                  aria-disabled={!studentName.trim()}
+                />
+                <button
+                  className="secondary-btn homework-float-btn"
+                  onClick={handleHomeworkCodeSubmit}
+                  disabled={!studentName.trim()}
+                >
+                  המשך
+                </button>
+              </div>
+            </div>
+            {hwError && <p className="homework-error">{hwError}</p>}
+          </div>
         ) : (
           <div className="question-container">
             <div className="student-top">
               <div className="name-field">
-                <label>שם תלמידה (אופציונלי)</label>
+                <label>שם תלמידה (חובה)</label>
                 <input
                   type="text"
                   value={studentName}
-                  onChange={(e) => setStudentName(e.target.value)}
+                  onChange={(e) => { setStudentName(e.target.value); setStudentNameError(''); }}
                   placeholder="כתבי את שמך"
+                  aria-required="true"
                 />
+                {studentNameError && <p className="field-error">{studentNameError}</p>}
               </div>
               {question?.targetStudent && (
                 <div className="target-pill">שאלה מיועדת ל: {question.targetStudent}</div>
@@ -279,26 +326,29 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
                 {question.questionType === 'yes-no' ? (
                   <>
                     <button
-                      className={`option-btn yes ${answer === true ? 'selected' : ''}`}
-                      onClick={() => setAnswer(true)}
+                      className={`option-btn yes ${answer === true ? 'selected' : ''} ${!studentName.trim() ? 'disabled' : ''}`}
+                      onClick={() => { if (!studentName.trim()) return; setAnswer(true); }}
+                      aria-disabled={!studentName.trim()}
                     >
                       <span className="icon">✓</span>
                       <span className="text">כן, הבנתי</span>
                     </button>
                     <button
-                      className={`option-btn no ${answer === false ? 'selected' : ''}`}
-                      onClick={() => setAnswer(false)}
+                      className={`option-btn no ${answer === false ? 'selected' : ''} ${!studentName.trim() ? 'disabled' : ''}`}
+                      onClick={() => { if (!studentName.trim()) return; setAnswer(false); }}
+                      aria-disabled={!studentName.trim()}
                     >
                       <span className="icon">✕</span>
                       <span className="text">לא, צריכה חיזוק</span>
                     </button>
                   </>
                 ) : question.questionType === 'multiple-choice' ? (
-                  question.options.map((option, idx) => (
+                    question.options.map((option, idx) => (
                     <button
                       key={idx}
-                      className={`option-btn choice ${answer === idx ? 'selected' : ''}`}
-                      onClick={() => setAnswer(idx)}
+                      className={`option-btn choice ${answer === idx ? 'selected' : ''} ${!studentName.trim() ? 'disabled' : ''}`}
+                      onClick={() => { if (!studentName.trim()) return; setAnswer(idx); }}
+                      aria-disabled={!studentName.trim()}
                     >
                       {option}
                     </button>
@@ -309,7 +359,7 @@ const StudentPage = ({ user, onLogout, onChangeRole }) => {
               <button
                 className="submit-btn"
                 onClick={handleSubmitAnswer}
-                disabled={answer === null}
+                disabled={answer === null || !studentName.trim()}
               >
                 שליחה
               </button>

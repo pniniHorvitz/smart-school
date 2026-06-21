@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { questionBank } from '../services/mockData';
-import { studentLists } from '../services/mockData';
+import { questionBank, studentFocusInsights, studentLists } from '../services/mockData';
 import './TeacherPage.css';
 import smartSchoolLogo from '../assets/smart-school-logo.png';
 import roleIcon from '../assets/role-icon.png';
@@ -19,6 +18,30 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
   const [finalQuestions, setFinalQuestions] = useState([]);
 
   const subjects = Object.keys(questionBank);
+
+  const getCurrentHomeworkMissing = () => {
+    try {
+      const codes = JSON.parse(sessionStorage.getItem('generatedCodes') || '[]');
+      const submitted = JSON.parse(sessionStorage.getItem('homeworkSubmitted') || '[]');
+      const submittedCodes = new Set(submitted.map(item => item.code));
+      return codes
+        .filter(item => !submittedCodes.has(item.code))
+        .map(item => ({
+          id: item.studentId,
+          name: item.name,
+          className: 'הסשן הנוכחי',
+          subject: selectedSubject || 'שיעורי בית',
+          percent: 0,
+          note: 'טרם הוזן קוד שיעורי בית'
+        }));
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const homeworkMissing = getCurrentHomeworkMissing().length > 0
+    ? getCurrentHomeworkMissing()
+    : studentFocusInsights.homeworkMissing;
 
   const handleSelectSubject = (subject) => {
     // starting a new subject flow: clear prior homework flags/codes so homework step can reappear
@@ -81,9 +104,7 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
     } catch (e) {
       // ignore storage errors
     }
-    // if homework was already handled (codes generated), skip to preview
-    const handled = sessionStorage.getItem('homeworkHandled');
-    setCurrentStep(handled === '1' ? 'preview' : 'homework');
+    setCurrentStep('preview');
   }, [customQuestion, customType, customOptions, selectedSubject, selectedQuestions, customTarget]);
 
   const handleBackToSelection = () => {
@@ -100,7 +121,8 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
       return;
     }
     sessionStorage.setItem('selectedQuestions', JSON.stringify(finalQuestions));
-    setCurrentStep('review');
+    // Move flow to homework step first, then return to review
+    setCurrentStep('homework');
   }, [finalQuestions]);
 
   const handleBackToPreview = () => {
@@ -115,16 +137,17 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
   const [selectedListId, setSelectedListId] = useState(studentLists?.[0]?.id || '');
   const [homeworkChecked, setHomeworkChecked] = useState(true);
   const [homeworkError, setHomeworkError] = useState('');
+  const [showTracking, setShowTracking] = useState(false);
 
   const openHomeworkPopup = () => {
     // store needed data for inline homework step
     sessionStorage.setItem('finalQuestions', JSON.stringify(finalQuestions));
     sessionStorage.setItem('selectedSubject', JSON.stringify(selectedSubject));
     sessionStorage.setItem('selectedListId', selectedListId);
-    // if homework already handled (codes generated and printed), proceed to students;
-    // otherwise, show the homework step before showing preview
+    // If homework was already decided, proceed to students; otherwise ask once.
     const handled = sessionStorage.getItem('homeworkHandled');
-    if (handled === '1') {
+    const skipped = sessionStorage.getItem('homeworkSkipped');
+    if (handled === '1' || skipped === '1') {
       handleStartQuestions();
     } else {
       setCurrentStep('homework');
@@ -140,40 +163,24 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
     const rand = () => Math.random().toString(36).slice(-6).toUpperCase();
     const codes = list.students.map(s => ({ studentId: s.id, name: s.name, code: rand() }));
     sessionStorage.setItem('generatedCodes', JSON.stringify(codes));
-    // mark homework handled so it won't be shown again
     sessionStorage.setItem('homeworkHandled', '1');
-    // remember where to return after printing
-    sessionStorage.setItem('returnTo', currentStep || 'homework');
-    // navigate to printable labels page
+    sessionStorage.removeItem('homeworkSkipped');
+    sessionStorage.setItem('returnTo', 'review');
     navigate('/print-codes');
-  };
-
-  const handleShowCodes = () => {
-    const raw = sessionStorage.getItem('generatedCodes');
-    // set return point to current step so PrintCodes can return here
-    sessionStorage.setItem('returnTo', currentStep || 'homework');
-    setHomeworkError('');
-    if (raw) {
-      navigate('/print-codes');
-    } else {
-      generateCodesAndPrint();
-    }
   };
 
   const continueWithoutHomework = () => {
     sessionStorage.setItem('homeworkSkipped', '1');
-    // continue to preview (do not start session yet)
-    setCurrentStep('preview');
+    sessionStorage.removeItem('homeworkHandled');
+    sessionStorage.removeItem('generatedCodes');
+    // Move to review so the teacher can still see the "מוכן לשיתוף" summary before starting
+    setCurrentStep('review');
   };
 
   const handleNavigate = (role) => {
     onChangeRole(role);
     navigate(`/${role}`);
   };
-
-  // derived for rendering homework box
-  const _displayList = studentLists.find(l => l.id === selectedListId) || null;
-  const _hasHomework = !!homeworkChecked && !!_displayList && _displayList.students && _displayList.students.length > 0;
 
   // On mount, restore flow state when coming back from print view
   useEffect(() => {
@@ -238,28 +245,86 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
 
       <div className="teacher-container">
         {currentStep === 'subject' && (
-          <div className="step-content">
-            <h2>בחירת מקצוע</h2>
-            <div className="subjects-grid">
-              {subjects.map(subject => (
-                <button
-                  key={subject}
-                  className="subject-button"
-                  onClick={() => handleSelectSubject(subject)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSelectSubject(subject)}
-                  tabIndex={0}
-                >
-                  {subject}
-                </button>
-              ))}
+          <>
+            <div className="tracking-toggle">
+              <button className="secondary-btn" onClick={() => setShowTracking(s => !s)}>
+                {showTracking ? 'הסתר מעקב תלמידות' : 'הצג מעקב תלמידות'}
+              </button>
             </div>
-          </div>
+
+            {showTracking && (
+              <section className="student-focus-section" aria-label="איתור תלמידות">
+                <div className="focus-section-head">
+                  <h2>תלמידות למעקב</h2>
+                </div>
+                <div className="focus-grid">
+                  <div className="focus-panel alert">
+                    <h3><span>לא השלימו ש״ב</span><strong>{homeworkMissing.length}</strong></h3>
+                    {homeworkMissing.map(student => (
+                      <div className="focus-row" key={`hw-${student.id}`}>
+                        <div>
+                          <strong>{student.name}</strong>
+                          <span>{student.className} · {student.subject}</span>
+                        </div>
+                        <p>{student.note}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="focus-panel warning">
+                    <h3><span>קושי חריג בחומר</span><strong>{studentFocusInsights.unusualDifficulty.length}</strong></h3>
+                    {studentFocusInsights.unusualDifficulty.map(student => (
+                      <div className="focus-row" key={`diff-${student.id}`}>
+                        <div>
+                          <strong>{student.name}</strong>
+                          <span>{student.className} · {student.subject}</span>
+                        </div>
+                        <p>{student.percent}% הבנה · {student.note}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="focus-panel success">
+                    <h3><span>שיפור משמעותי</span><strong>{studentFocusInsights.improved.length}</strong></h3>
+                    {studentFocusInsights.improved.map(student => (
+                      <div className="focus-row" key={`up-${student.id}`}>
+                        <div>
+                          <strong>{student.name}</strong>
+                          <span>{student.className} · {student.subject}</span>
+                        </div>
+                        <p>+{student.percent}% מהחודש הקודם · {student.note}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            <div className="step-content">
+              <h2>בחירת מקצוע</h2>
+              <div className="subjects-grid">
+                {subjects.map(subject => (
+                  <button
+                    key={subject}
+                    className="subject-button"
+                    onClick={() => handleSelectSubject(subject)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSelectSubject(subject)}
+                    tabIndex={0}
+                  >
+                    {subject}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
         )}
 
         {currentStep === 'homework' && (
           <div className="step-content">
-            <h2>סיום סשן — שיעורי בית</h2>
+            <h2>שיעורי בית לפני מעבר לתלמידות</h2>
             <div className="custom-form">
+              <p className="homework-step-desc">
+                אם יש שיעורי בית, נפיק קוד אישי לכל תלמידה ונעבור לדף המדבקות להדפסה.
+                אם אין שיעורי בית, התלמידות יתחילו מיד בשאלות.
+              </p>
               <div className="form-group homework-toggle">
                 <label>
                   <input type="radio" name="homework" checked={!homeworkChecked} onChange={() => setHomeworkChecked(false)} />
@@ -280,11 +345,13 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
                 </div>
               )}
 
+              {homeworkError && <p className="homework-error">{homeworkError}</p>}
+
               <div className="step-actions">
                 {!homeworkChecked ? (
-                  <button className="primary-btn" onClick={continueWithoutHomework}>ללא שיעורי בית — המשך</button>
+                  <button className="primary-btn" onClick={continueWithoutHomework}>אין שיעורי בית — מעבר לתלמידות</button>
                 ) : (
-                  <button className="primary-btn" onClick={generateCodesAndPrint}>הפק קודים + הדפסה</button>
+                  <button className="primary-btn" onClick={generateCodesAndPrint}>יש שיעורי בית — הפקת מדבקות</button>
                 )}
                 <button className="secondary-btn" onClick={() => setCurrentStep('review')}>ביטול</button>
               </div>
@@ -474,39 +541,38 @@ const TeacherPage = ({ user, onLogout, onChangeRole }) => {
               <button className="success-btn" onClick={openHomeworkPopup}>מעבר לתלמידות</button>
             </div>
 
-            {/* Non-modal homework box on the ready-to-share view as well */}
-            <div className="homework-box" role="region" aria-label="שיעורי בית">
-              <div className={`homework-accent ${_hasHomework ? 'active' : 'inactive'}`}>{_hasHomework ? '✓' : '✕'}</div>
-              <div className="homework-content">
-                <h3 className="homework-title">שיעורי בית ותוויות לתלמידות</h3>
-                <div className="homework-summary">
-                  {_displayList ? (
-                    <>
-                      <p className="homework-list">רשימת תלמידות: <strong>{_displayList.name}</strong> ({_displayList.students.length})</p>
-                      {homeworkError && <p className="homework-error">{homeworkError}</p>}
-                      <div className="homework-actions">
-                        <button
-                          className="primary-btn"
-                          onClick={_hasHomework ? handleShowCodes : undefined}
-                          disabled={!_hasHomework}
-                          title={_hasHomework ? 'הצג והדפס קודי תלמידות' : 'אין שיעורי בית — אין קודים להצגה'}
-                        >
-                          הצג קודים
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p className="homework-list">לא נבחרה רשימת תלמידות</p>
-                      {homeworkError && <p className="homework-error">{homeworkError}</p>}
-                      <div className="homework-actions">
-                        <button className="primary-btn" disabled>הצג קודים</button>
-                      </div>
-                    </>
-                  )}
+            {(() => {
+              let hasHomework = false;
+              try {
+                const handled = sessionStorage.getItem('homeworkHandled');
+                const codesRaw = sessionStorage.getItem('generatedCodes');
+                const codes = codesRaw ? JSON.parse(codesRaw) : [];
+                hasHomework = handled === '1' || (codes && codes.length > 0);
+              } catch (e) {
+                hasHomework = false;
+              }
+
+              return (
+                <div className="homework-box" role="region" aria-label="השלב הבא">
+                  <div className={`homework-accent ${hasHomework ? 'active' : 'inactive'}`}>{hasHomework ? 'V' : 'X'}</div>
+                  <div className="homework-content">
+                    <h3 className="homework-title">{hasHomework ? 'יש שיעורי בית' : 'אין שיעורי בית'}</h3>
+                    <div className="homework-summary">
+                      <p className="homework-list">
+                        {hasHomework
+                          ? 'הופקו קודי שיעורי בית — ניתן להדפיס או להמשיך לשיתוף עם הקודים.'
+                          : 'בחרת שאין שיעורי בית — נמשיך לשיתוף השאלות ללא הפקת מדבקות.'}
+                      </p>
+                    </div>
+                    <div className="homework-actions">
+                      {hasHomework ? (
+                        <button className="primary-btn" onClick={() => { navigate('/print-codes'); }}>הצג/הדפס קודים</button>
+                      ) : null}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         )}
       </div>

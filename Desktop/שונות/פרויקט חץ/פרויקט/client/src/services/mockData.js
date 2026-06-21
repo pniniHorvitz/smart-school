@@ -176,6 +176,22 @@ export const mockAnalytics = {
   ]
 };
 
+export const studentFocusInsights = {
+  homeworkMissing: [
+    { id: 's2', name: 'מאיה לוי', className: 'י׳1', subject: 'מתמטיקה', percent: 0, note: 'לא הוזן קוד שיעורי בית בסשן האחרון' },
+    { id: 's7', name: 'שירה טל', className: 'י״א2', subject: 'מתמטיקה', percent: 0, note: 'שני שיעורי בית חסרים השבוע' }
+  ],
+  unusualDifficulty: [
+    { id: 's3', name: 'טליה ברק', className: 'י׳1', subject: 'פונקציות', percent: 38, note: 'פער חריג ביחס לממוצע הכיתה' },
+    { id: 's10', name: 'ליהו אביטל', className: 'קבוצת אנגלית', subject: 'אנסין', percent: 42, note: 'נדרשת בדיקת הבנה נקודתית' }
+  ],
+  improved: [
+    { id: 's1', name: 'נועה כהן', className: 'י׳1', subject: 'מתמטיקה', percent: 18, note: 'עלייה מ־68% ל־86%' },
+    { id: 's6', name: 'אדל פרץ', className: 'י״א2', subject: 'מתמטיקה', percent: 24, note: 'עלייה מ־57% ל־81%' },
+    { id: 's11', name: 'אורי שגב', className: 'קבוצת אנגלית', subject: 'אנגלית', percent: 15, note: 'עלייה מ־72% ל־87%' }
+  ]
+};
+
 export const mockTeacherQuestions = [
   {
     id: 'q1',

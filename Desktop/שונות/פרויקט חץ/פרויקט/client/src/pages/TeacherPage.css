@@ -130,11 +130,28 @@
 }
 
 .teacher-container {
-  max-width: 760px;
+  max-width: 1120px;
   margin: 40px auto;
   padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Tracking toggle layout: keep button separate from the grid below */
+.tracking-toggle {
+  display: block;
+  text-align: right; /* force visual right alignment */
+  margin-bottom: 12px;
+}
+
+.tracking-toggle .primary-btn,
+.tracking-toggle .secondary-btn {
+  display: inline-block;
+  margin: 0;
+}
+
+.student-focus-section {
+  margin-top: 8px;
 }
 
 .step-content {
@@ -145,6 +162,119 @@
   animation: slideDown 0.4s ease;
   width: 100%;
   box-sizing: border-box;
+}
+
+.student-focus-section {
+  margin-bottom: 26px;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(31, 63, 74, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 18px 42px rgba(31, 63, 74, 0.1);
+}
+
+.focus-section-head {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.focus-section-head h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.35rem;
+}
+
+.focus-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.focus-panel {
+  background: #ffffff;
+  border: 1px solid rgba(31, 63, 74, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(31, 63, 74, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.focus-panel h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: var(--ink);
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(31, 63, 74, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.focus-panel h3 strong {
+  min-width: 32px;
+  height: 28px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(31, 63, 74, 0.08);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.focus-panel.alert {
+  box-shadow: inset 0 4px 0 #b85757, 0 10px 24px rgba(31, 63, 74, 0.08);
+}
+
+.focus-panel.warning {
+  box-shadow: inset 0 4px 0 #c9a46a, 0 10px 24px rgba(31, 63, 74, 0.08);
+}
+
+.focus-panel.success {
+  box-shadow: inset 0 4px 0 var(--accent), 0 10px 24px rgba(31, 63, 74, 0.08);
+}
+
+.focus-row {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(31, 63, 74, 0.08);
+}
+
+.focus-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.focus-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.focus-row strong {
+  color: var(--ink);
+}
+
+.focus-row span,
+.focus-row p {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.focus-row p {
+  margin: 5px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .focus-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @keyframes slideDown {
@@ -344,6 +474,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  justify-content: center;
 }
 
 .homework-toggle label {
@@ -376,6 +507,17 @@
 
 .homework-toggle .radio-text:hover {
   transform: translateY(-2px);
+}
+
+.homework-step-desc {
+  margin: -4px 0 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(44, 154, 161, 0.07);
+  border: 1px solid rgba(44, 154, 161, 0.16);
+  color: var(--ink-soft);
+  line-height: 1.7;
+  text-align: center;
 }
 
 .form-group textarea,
@@ -571,9 +713,9 @@
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, #fbfffe 100%);
-  border: 1px solid rgba(31,63,74,0.08);
-  box-shadow: 0 12px 30px rgba(31,63,74,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(246, 250, 249, 0.96) 100%);
+  border: 1px solid rgba(44,154,161,0.18);
+  box-shadow: 0 12px 28px rgba(31,63,74,0.08);
   border-radius: 14px;
   padding: 22px;
   margin-top: 24px;
@@ -589,7 +731,7 @@
   align-items:center;
   justify-content:center;
   font-weight:800;
-  font-size:1.2rem;
+  font-size:1.35rem;
   box-shadow: 0 6px 18px rgba(31,63,74,0.12);
   flex-shrink: 0;
 }
@@ -612,7 +754,7 @@
 
 .homework-title {
   margin: 0 0 6px 0;
-  font-size: 1.25rem;
+  font-size: 1.28rem;
   color: var(--ink);
   font-weight: 800;
 }
@@ -706,11 +848,12 @@
 .homework-list {
   font-size: 0.98rem;
   color: var(--ink-strong, #1f3b3b);
-  background: rgba(44,154,161,0.04);
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(31,63,74,0.06);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
   max-width: 420px;
+  line-height: 1.65;
 }
 
 .homework-actions {
